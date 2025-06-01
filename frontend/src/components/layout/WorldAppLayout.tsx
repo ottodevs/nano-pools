@@ -2,11 +2,12 @@
  * Layout component optimized for World App webview
  */
 
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { getEnvironmentInfo } from '@/lib/environment';
-import { ConnectButton } from '@/components/auth/ConnectButton';
+import { useEffect, useState } from "react";
+import { getEnvironmentInfo } from "@/lib/environment";
+import { ConnectButton } from "@/components/auth/ConnectButton";
+import { TransactionFeedback } from "@/components/feedback/TransactionFeedback";
 
 interface WorldAppLayoutProps {
   children: React.ReactNode;
@@ -16,11 +17,11 @@ export function WorldAppLayout({ children }: WorldAppLayoutProps) {
   const [envInfo, setEnvInfo] = useState<{
     isWorldApp: boolean;
     isMiniKitAvailable: boolean;
-    platform: 'world-app' | 'browser' | 'unknown';
+    platform: "world-app" | "browser" | "unknown";
   }>({
     isWorldApp: false,
     isMiniKitAvailable: false,
-    platform: 'unknown'
+    platform: "unknown",
   });
 
   useEffect(() => {
@@ -31,10 +32,12 @@ export function WorldAppLayout({ children }: WorldAppLayoutProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header optimized for World App */}
-      <header className={`
+      <header
+        className={`
         bg-white shadow-sm border-b border-gray-200
-        ${envInfo.isWorldApp ? 'pt-safe-top' : 'pt-4'}
-      `}>
+        ${envInfo.isWorldApp ? "pt-safe-top" : "pt-4"}
+      `}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
@@ -54,10 +57,12 @@ export function WorldAppLayout({ children }: WorldAppLayoutProps) {
       </header>
 
       {/* Main content area */}
-      <main className={`
+      <main
+        className={`
         flex-1
-        ${envInfo.isWorldApp ? 'pb-safe-bottom' : 'pb-4'}
-      `}>
+        ${envInfo.isWorldApp ? "pb-safe-bottom" : "pb-4"}
+      `}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           {children}
         </div>
@@ -73,6 +78,9 @@ export function WorldAppLayout({ children }: WorldAppLayoutProps) {
           </div>
         </footer>
       )}
+
+      {/* Transaction Feedback */}
+      <TransactionFeedback />
     </div>
   );
 }
