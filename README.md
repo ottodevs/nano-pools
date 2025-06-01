@@ -10,7 +10,7 @@
     <a href="#networks">Networks</a> •
     <a href="#development">Development</a>
   </p>
-  
+
   <img src="frontend/public/banner.png" alt="Pool Payments Protocol Banner" width="800" style="margin: 20px 0" />
 
   <p>
@@ -62,6 +62,21 @@ Sign in with Ethereum (SIWE) protocol via MiniKit for secure, decentralized auth
 
 ### 🎮 Gamified Experience
 Earn Merits by creating pools, contributing, and completing funding goals
+
+## 🏆 Deployment Achievements
+
+### ✅ Flow EVM Testnet Integration Complete
+- **Smart Contracts**: Successfully deployed using Hardhat Ignition
+- **CREATE2 Factory**: Deterministic address deployment system
+- **Blockscout Integration**: Ready for contract verification and Merit rewards
+- **Sample Pool**: Test pool created and validated
+- **Documentation**: Complete deployment records and guides
+
+### 🔧 Technical Milestones
+- **Hardhat 3.0**: Successfully configured with viem toolbox
+- **Multi-chain Setup**: Flow EVM and World Chain network configurations
+- **Deployment Automation**: Ignition modules for consistent deployments
+- **Environment Management**: Configuration variables for secure key handling
 
 <br />
 
@@ -119,7 +134,7 @@ The Pool Payments Protocol consists of several key components:
 
 ### Merit Rewards System
 - Pool Creation: 20 Merits
-- Pool Contribution: 5 Merits 
+- Pool Contribution: 5 Merits
 - Pool Withdrawal: 2 Merits
 - Pool Completion: 15 Merits
 
@@ -159,10 +174,24 @@ npm run dev
 
 ### Deployment
 
+#### ✅ Flow EVM Testnet (COMPLETED)
 ```bash
-# Deploy to Flow EVM testnet with Blockscout integration
-npm run deploy:blockscout:flow
+# Deploy using Hardhat Ignition (Hardhat 3.0)
+export FLOW_EVM_TESTNET_RPC_URL="https://testnet.evm.nodes.onflow.org"
+export FLOW_EVM_PRIVATE_KEY="0x..."
 
+# Deploy CREATE2 Factory
+npx hardhat ignition deploy ignition/modules/Create2Factory.ts --network flowEvmTestnet
+
+# Deploy NanoPool with CREATE2
+npx hardhat ignition deploy ignition/modules/NanoPoolWithCreate2.ts --network flowEvmTestnet
+
+# Validate deployment
+npx hardhat run scripts/validate-flow-deployment.ts --network flowEvmTestnet
+```
+
+#### 🔄 World Chain Sepolia (Pending)
+```bash
 # Deploy to World Chain Sepolia with Blockscout integration
 npm run deploy:blockscout:world
 
@@ -170,14 +199,41 @@ npm run deploy:blockscout:world
 npm run verify:addresses
 ```
 
+#### 📊 Deployment Status
+- ✅ **Flow EVM Testnet**: Deployed and validated
+- 🔄 **World Chain Sepolia**: Pending deployment
+- 🔄 **Cross-chain verification**: Pending World Chain deployment
+
 <br />
 
 ## 🌐 Networks
 
-| Network | Chain ID | Explorer | API | Merits |
-|---------|----------|----------|-----|--------|
-| Flow EVM Testnet | 545 | [Explorer](https://evm-testnet.flowscan.org) | [API](https://evm-testnet.flowscan.org/api) | ✅ |
-| World Chain Sepolia | 4801 | [Explorer](https://worldchain-sepolia.explorer.alchemy.com) | [API](https://worldchain-sepolia.explorer.alchemy.com/api) | ✅ |
+| Network | Chain ID | Status | Explorer | API | Merits |
+|---------|----------|--------|----------|-----|--------|
+| Flow EVM Testnet | 545 | ✅ **DEPLOYED** | [Explorer](https://evm-testnet.flowscan.org) | [API](https://evm-testnet.flowscan.org/api) | ✅ |
+| World Chain Sepolia | 4801 | 🔄 Pending | [Explorer](https://worldchain-sepolia.explorer.alchemy.com) | [API](https://worldchain-sepolia.explorer.alchemy.com/api) | ✅ |
+
+### 🎯 Flow EVM Testnet Deployment (COMPLETED)
+
+**Deployment Date**: June 1, 2025
+**Deployment Method**: Hardhat Ignition (Hardhat 3.0)
+**Status**: ✅ Successfully Deployed
+
+#### 📋 Contract Addresses
+| Contract | Address | Explorer Link |
+|----------|---------|---------------|
+| CREATE2 Factory | `0x20aD2b34860A7A44E548D4C740845A18C6753ba0` | [View Contract](https://evm-testnet.flowscan.org/address/0x20aD2b34860A7A44E548D4C740845A18C6753ba0) |
+| NanoPool | `0xacAdfFE7D479c416C25509Cea6D36Bb797E34f29` | [View Contract](https://evm-testnet.flowscan.org/address/0xacAdfFE7D479c416C25509Cea6D36Bb797E34f29) |
+
+#### 🔧 Network Configuration
+- **RPC URL**: `https://testnet.evm.nodes.onflow.org`
+- **Chain ID**: 545
+- **Gas Price**: 1 gwei
+- **Block Explorer**: https://evm-testnet.flowscan.org
+
+#### 📁 Deployment Documentation
+- **Deployment Record**: [`deployments/flow-evm-testnet.json`](./deployments/flow-evm-testnet.json)
+- **Full Documentation**: [`deployments/flow-evm-testnet-deployment.md`](./deployments/flow-evm-testnet-deployment.md)
 
 <br />
 
@@ -189,11 +245,21 @@ npm run verify:addresses
 ├── contracts/                # Solidity smart contracts
 │   ├── Create2Factory.sol    # Factory for consistent addresses
 │   └── NanoPool.sol          # Main pool protocol contract
-├── deploy/                   # Deployment scripts
+├── deploy/                   # Legacy deployment scripts (Hardhat 2.x)
+├── deployments/              # ✅ Deployment records and documentation
+│   ├── flow-evm-testnet.json # Flow EVM deployment record
+│   └── flow-evm-testnet-deployment.md # Complete deployment docs
 ├── docs/                     # Documentation
 ├── frontend/                 # Next.js frontend application
 │   ├── public/               # Static assets
 │   └── src/                  # React components and hooks
+├── ignition/                 # ✅ Hardhat Ignition deployment modules
+│   └── modules/              # Deployment modules for Hardhat 3.0
+│       ├── Create2Factory.ts # CREATE2 factory deployment
+│       ├── NanoPool.ts       # Basic NanoPool deployment
+│       └── NanoPoolWithCreate2.ts # NanoPool with CREATE2
+├── scripts/                  # Utility and validation scripts
+│   └── validate-flow-deployment.ts # Flow deployment validation
 └── src/                      # Shared TypeScript code
     ├── components/           # React components
     ├── hooks/                # React hooks
@@ -214,6 +280,17 @@ npm run dev
 
 # Build for production
 npm run build
+
+# Deploy to Flow EVM testnet (Hardhat Ignition)
+npx hardhat ignition deploy ignition/modules/Create2Factory.ts --network flowEvmTestnet
+npx hardhat ignition deploy ignition/modules/NanoPoolWithCreate2.ts --network flowEvmTestnet
+
+# Validate Flow EVM deployment
+npx hardhat run scripts/validate-flow-deployment.ts --network flowEvmTestnet
+
+# Legacy deployment commands (Hardhat 2.x style)
+npm run deploy:blockscout:flow
+npm run deploy:blockscout:world
 ```
 
 <br />

@@ -1,0 +1,45 @@
+{
+  "network": "Flow EVM Testnet",
+  "chainId": 545,
+  "rpcUrl": "https://testnet.evm.nodes.onflow.org",
+  "explorer": "https://evm-testnet.flowscan.org",
+  "timestamp": "2025-06-01T05:53:51.433Z",
+  "deploymentMethod": "Hardhat Ignition",
+  "status": "deployed",
+  "validated": true,
+  "contracts": {
+    "Create2Factory": {
+      "address": "0x20aD2b34860A7A44E548D4C740845A18C6753ba0",
+      "module": "Create2FactoryModule",
+      "explorerUrl": "https://evm-testnet.flowscan.org/address/0x20aD2b34860A7A44E548D4C740845A18C6753ba0",
+      "verified": false
+    },
+    "NanoPool": {
+      "address": "0xacAdfFE7D479c416C25509Cea6D36Bb797E34f29",
+      "module": "NanoPoolWithCreate2Module",
+      "explorerUrl": "https://evm-testnet.flowscan.org/address/0xacAdfFE7D479c416C25509Cea6D36Bb797E34f29",
+      "verified": false
+    }
+  },
+  "gasConfiguration": {
+    "gasPrice": "1000000000",
+    "timeout": 60000
+  },
+  "samplePool": {
+    "beneficiary": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "description": "Flow EVM Testnet Pool",
+    "goalAmount": "10000000000000000",
+    "created": true
+  },
+  "blockscoutIntegration": {
+    "enabled": true,
+    "apiUrl": "https://evm-testnet.flowscan.org/api",
+    "explorerUrl": "https://evm-testnet.flowscan.org"
+  },
+  "crossChainCompatibility": {
+    "worldChainSepolia": {
+      "compatible": true,
+      "addressConsistency": "pending_validation"
+    }
+  }
+}
