@@ -3,27 +3,27 @@
  * Supports Flow EVM Testnet and World Chain Sepolia
  */
 
-import { createPublicClient, createWalletClient, http, custom, Chain } from 'viem';
-import { defineChain } from 'viem';
+import { createPublicClient, createWalletClient, http, custom } from "viem";
+import { defineChain } from "viem";
 
 // Flow EVM Testnet Chain Definition
 export const flowEvmTestnet = defineChain({
   id: 545,
-  name: 'Flow EVM Testnet',
+  name: "Flow EVM Testnet",
   nativeCurrency: {
     decimals: 18,
-    name: 'Flow',
-    symbol: 'FLOW',
+    name: "Flow",
+    symbol: "FLOW",
   },
   rpcUrls: {
     default: {
-      http: ['https://testnet.evm.nodes.onflow.org'],
+      http: ["https://testnet.evm.nodes.onflow.org"],
     },
   },
   blockExplorers: {
     default: {
-      name: 'Flow EVM Testnet Explorer',
-      url: 'https://evm-testnet.flowscan.org',
+      name: "Flow EVM Testnet Explorer",
+      url: "https://evm-testnet.flowscan.org",
     },
   },
   testnet: true,
@@ -32,21 +32,21 @@ export const flowEvmTestnet = defineChain({
 // World Chain Sepolia Chain Definition
 export const worldChainSepolia = defineChain({
   id: 4801,
-  name: 'World Chain Sepolia',
+  name: "World Chain Sepolia",
   nativeCurrency: {
     decimals: 18,
-    name: 'Ethereum',
-    symbol: 'ETH',
+    name: "Ethereum",
+    symbol: "ETH",
   },
   rpcUrls: {
     default: {
-      http: ['https://worldchain-sepolia.g.alchemy.com/v2/demo'],
+      http: ["https://worldchain-sepolia.g.alchemy.com/v2/demo"],
     },
   },
   blockExplorers: {
     default: {
-      name: 'World Chain Sepolia Explorer',
-      url: 'https://worldchain-sepolia.explorer.alchemy.com',
+      name: "World Chain Sepolia Explorer",
+      url: "https://worldchain-sepolia.explorer.alchemy.com",
     },
   },
   testnet: true,
@@ -59,28 +59,28 @@ export const supportedChains = [flowEvmTestnet, worldChainSepolia] as const;
 export const chainConfig = {
   [flowEvmTestnet.id]: {
     chain: flowEvmTestnet,
-    rpcUrl: 'https://testnet.evm.nodes.onflow.org',
-    explorerUrl: 'https://evm-testnet.flowscan.org',
-    blockscoutApiUrl: 'https://evm-testnet.flowscan.org/api',
+    rpcUrl: "https://testnet.evm.nodes.onflow.org",
+    explorerUrl: "https://evm-testnet.flowscan.org",
+    blockscoutApiUrl: "https://evm-testnet.flowscan.org/api",
   },
   [worldChainSepolia.id]: {
     chain: worldChainSepolia,
-    rpcUrl: 'https://worldchain-sepolia.g.alchemy.com/v2/demo',
-    explorerUrl: 'https://worldchain-sepolia.explorer.alchemy.com',
-    blockscoutApiUrl: 'https://worldchain-sepolia.explorer.alchemy.com/api',
+    rpcUrl: "https://worldchain-sepolia.g.alchemy.com/v2/demo",
+    explorerUrl: "https://worldchain-sepolia.explorer.alchemy.com",
+    blockscoutApiUrl: "https://worldchain-sepolia.explorer.alchemy.com/api",
   },
 } as const;
 
 // Contract addresses from deployment
 export const contractAddresses = {
   [flowEvmTestnet.id]: {
-    nanoPool: '0xacAdfFE7D479c416C25509Cea6D36Bb797E34f29',
-    create2Factory: '0x20aD2b34860A7A44E548D4C740845A18C6753ba0',
+    nanoPool: "0xacAdfFE7D479c416C25509Cea6D36Bb797E34f29",
+    create2Factory: "0x20aD2b34860A7A44E548D4C740845A18C6753ba0",
   },
   [worldChainSepolia.id]: {
     // TODO: Add World Chain addresses after deployment
-    nanoPool: '0x0000000000000000000000000000000000000000',
-    create2Factory: '0x0000000000000000000000000000000000000000',
+    nanoPool: "0x0000000000000000000000000000000000000000",
+    create2Factory: "0x0000000000000000000000000000000000000000",
   },
 } as const;
 
@@ -104,7 +104,7 @@ export function createWalletClientForChain(chainId: number) {
   }
 
   // Check if we're in a browser environment with window.ethereum
-  if (typeof window !== 'undefined' && window.ethereum) {
+  if (typeof window !== "undefined" && window.ethereum) {
     return createWalletClient({
       chain: config.chain,
       transport: custom(window.ethereum),
@@ -128,10 +128,16 @@ export function getPublicClient(chainId: number) {
 }
 
 // Get contract address for a specific chain and contract
-export function getContractAddress(chainId: number, contract: 'nanoPool' | 'create2Factory') {
-  const addresses = contractAddresses[chainId as keyof typeof contractAddresses];
+export function getContractAddress(
+  chainId: number,
+  contract: "nanoPool" | "create2Factory"
+) {
+  const addresses =
+    contractAddresses[chainId as keyof typeof contractAddresses];
   if (!addresses) {
-    throw new Error(`No contract addresses configured for chain ID: ${chainId}`);
+    throw new Error(
+      `No contract addresses configured for chain ID: ${chainId}`
+    );
   }
   return addresses[contract];
 }

@@ -6,10 +6,8 @@
 
 import { useState, useEffect } from "react";
 import { Pool, PoolStatus, getPoolStatus } from "@/lib/contracts";
-import { usePool } from "@/hooks/useNanoPool";
 import { PoolCard } from "./PoolCard";
 import { CreatePoolForm } from "./CreatePoolForm";
-import { defaultChainId } from "@/lib/viem";
 
 interface PoolDashboardProps {
   initialPoolIds?: number[];
