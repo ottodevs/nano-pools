@@ -3,6 +3,14 @@ import { HardhatUserConfig, configVariable } from "hardhat/config";
 import hardhatToolboxViemPlugin from "@nomicfoundation/hardhat-toolbox-viem";
 import "@nomicfoundation/hardhat-ignition";
 
+// Import additional plugins for Hardhat 2.x compatibility
+// Note: Some plugins may not be compatible with Hardhat 3.0 yet
+// import "@nomicfoundation/hardhat-verify";
+// import "hardhat-gas-reporter";
+// import "hardhat-contract-sizer";
+// import "@openzeppelin/hardhat-upgrades";
+// import "hardhat-deploy";
+
 const config: HardhatUserConfig = {
   /*
    * In Hardhat 3, plugins are defined as part of the Hardhat config instead of
@@ -81,70 +89,134 @@ const config: HardhatUserConfig = {
    */
   networks: {
     // Local development networks
-    hardhatMainnet: {
+    hardhat: {
       type: "edr",
       chainType: "l1",
     },
-    hardhatOp: {
-      type: "edr",
-      chainType: "optimism",
-    },
-    
-    // Test networks
-    sepolia: {
-      type: "http",
-      chainType: "l1",
-      url: configVariable("SEPOLIA_RPC_URL"),
-      accounts: [configVariable("SEPOLIA_PRIVATE_KEY")],
-    },
-    
-    // Base networks
-    baseMainnet: {
-      type: "http",
-      chainType: "l1",
-      url: configVariable("BASE_MAINNET_RPC_URL"),
-      accounts: [configVariable("BASE_PRIVATE_KEY")],
-    },
-    baseSepolia: {
-      type: "http",
-      chainType: "l1",
-      url: configVariable("BASE_SEPOLIA_RPC_URL"),
-      accounts: [configVariable("BASE_PRIVATE_KEY")],
-    },
-    
-    // Flow EVM networks
-    flowEvmMainnet: {
-      type: "http",
-      chainType: "generic",
-      url: configVariable("FLOW_EVM_MAINNET_RPC_URL"),
-      accounts: [configVariable("FLOW_EVM_PRIVATE_KEY")],
-    },
+
+    // Flow EVM testnet (chainId: 545)
     flowEvmTestnet: {
       type: "http",
       chainType: "generic",
       url: configVariable("FLOW_EVM_TESTNET_RPC_URL"),
       accounts: [configVariable("FLOW_EVM_PRIVATE_KEY")],
+      gasPrice: 1000000000, // 1 gwei
+      timeout: 60000,
     },
-    
-    // World Chain networks
-    worldChainMainnet: {
+
+    // World Chain Sepolia testnet (chainId: 4801)
+    worldChainSepolia: {
       type: "http",
       chainType: "generic",
-      url: configVariable("WORLD_CHAIN_MAINNET_RPC_URL"),
+      url: configVariable("WORLD_CHAIN_SEPOLIA_RPC_URL"),
       accounts: [configVariable("WORLD_CHAIN_PRIVATE_KEY")],
-    },
-    worldChainTestnet: {
-      type: "http",
-      chainType: "generic",
-      url: configVariable("WORLD_CHAIN_TESTNET_RPC_URL"),
-      accounts: [configVariable("WORLD_CHAIN_PRIVATE_KEY")],
+      gasPrice: 1000000000, // 1 gwei
+      timeout: 60000,
     },
   },
-  
+
   // Configure ignition module deployment
   ignition: {
     // Ignition configuration goes here
-  }
+  },
+
+  // Etherscan verification configuration (commented out due to Hardhat 3.0 compatibility)
+  // etherscan: {
+  //   apiKey: {
+  //     // Base networks
+  //     base: process.env.BASESCAN_API_KEY || "",
+  //     baseSepolia: process.env.BASESCAN_API_KEY || "",
+  //     // Flow EVM networks
+  //     flowEvmMainnet: process.env.FLOWSCAN_API_KEY || "",
+  //     flowEvmTestnet: process.env.FLOWSCAN_API_KEY || "",
+  //     // World Chain networks
+  //     worldChainMainnet: process.env.WORLDCHAIN_API_KEY || "",
+  //     worldChainSepolia: process.env.WORLDCHAIN_API_KEY || "",
+  //   },
+  //   customChains: [
+  //     {
+  //       network: "baseSepolia",
+  //       chainId: 84532,
+  //       urls: {
+  //         apiURL: "https://api-sepolia.basescan.org/api",
+  //         browserURL: "https://sepolia.basescan.org",
+  //       },
+  //     },
+  //     {
+  //       network: "flowEvmTestnet",
+  //       chainId: 545,
+  //       urls: {
+  //         apiURL: "https://evm-testnet.flowscan.org/api",
+  //         browserURL: "https://evm-testnet.flowscan.org",
+  //       },
+  //     },
+  //     {
+  //       network: "flowEvmMainnet",
+  //       chainId: 747,
+  //       urls: {
+  //         apiURL: "https://evm.flowscan.org/api",
+  //         browserURL: "https://evm.flowscan.org",
+  //       },
+  //     },
+  //     {
+  //       network: "worldChainSepolia",
+  //       chainId: 4801,
+  //       urls: {
+  //         apiURL: "https://worldchain-sepolia.explorer.alchemy.com/api",
+  //         browserURL: "https://worldchain-sepolia.explorer.alchemy.com",
+  //       },
+  //     },
+  //     {
+  //       network: "worldChainMainnet",
+  //       chainId: 480,
+  //       urls: {
+  //         apiURL: "https://worldchain-mainnet.explorer.alchemy.com/api",
+  //         browserURL: "https://worldchain-mainnet.explorer.alchemy.com",
+  //       },
+  //     },
+  //   ],
+  // },
+
+  // Gas reporter configuration (commented out due to Hardhat 3.0 compatibility)
+  // gasReporter: {
+  //   enabled: process.env.REPORT_GAS !== undefined,
+  //   currency: "USD",
+  //   gasPrice: 21,
+  //   coinmarketcap: process.env.COINMARKETCAP_API_KEY || "",
+  //   excludeContracts: ["contracts/mocks/", "contracts/test/"],
+  // },
+
+  // Contract size checker configuration (commented out due to Hardhat 3.0 compatibility)
+  // contractSizer: {
+  //   alphaSort: true,
+  //   disambiguatePaths: false,
+  //   runOnCompile: true,
+  //   strict: true,
+  //   only: [],
+  // },
+
+  // Hardhat Deploy configuration (commented out due to Hardhat 3.0 compatibility)
+  // namedAccounts: {
+  //   deployer: {
+  //     default: 0, // First account as deployer
+  //     baseSepolia: 0,
+  //     flowEvmTestnet: 0,
+  //     worldChainSepolia: 0,
+  //   },
+  //   admin: {
+  //     default: 1, // Second account as admin
+  //     baseSepolia: 1,
+  //     flowEvmTestnet: 1,
+  //     worldChainSepolia: 1,
+  //   },
+  // },
+
+  // Deployment paths (commented out due to Hardhat 3.0 compatibility)
+  // paths: {
+  //   deploy: "deploy",
+  //   deployments: "deployments",
+  //   imports: "imports",
+  // },
 };
 
 export default config;
