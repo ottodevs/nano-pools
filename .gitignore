@@ -38,3 +38,18 @@ scripts
 .windsurfrules
 .env.example
 .roomodes
+
+# Compilation output
+/dist
+
+# pnpm deploy output
+/bundle
+
+# Hardhat Build Artifacts
+/artifacts
+
+# Hardhat compilation (v2) support directory
+/cache
+
+# Typechain output
+/types

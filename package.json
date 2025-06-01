@@ -1,0 +1,37 @@
+{
+  "name": "pool-payments-protocol",
+  "version": "0.1.0",
+  "description": "A multi-chain nanopooling protocol for small-scale payments and crowdfunding",
+  "main": "index.js",
+  "scripts": {
+    "test": "hardhat test",
+    "compile": "hardhat compile",
+    "deploy": "hardhat deploy",
+    "node": "hardhat node",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write ."
+  },
+  "keywords": [
+    "ethereum",
+    "hardhat",
+    "solidity",
+    "smart-contracts",
+    "pool-payments",
+    "multi-chain"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ignition": "^3.0.0-next.13",
+    "@nomicfoundation/hardhat-toolbox-viem": "^4.0.0-next.13",
+    "@types/node": "^22.15.29",
+    "forge-std": "github:foundry-rs/forge-std#v1.9.4",
+    "hardhat": "^3.0.0-next.13",
+    "typescript": "~5.5.0",
+    "viem": "^2.30.5"
+  }
+}
