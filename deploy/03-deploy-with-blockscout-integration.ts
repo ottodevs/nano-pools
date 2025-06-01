@@ -3,10 +3,13 @@
  * Automatically verifies contracts and sets up monitoring
  */
 
-import { ethers } from "hardhat";
+import hre from "hardhat";
 import { writeFileSync, readFileSync, existsSync } from "fs";
 import { join } from "path";
-import { BlockscoutService, BLOCKSCOUT_NETWORKS } from "../src/services/BlockscoutService";
+import {
+  BlockscoutService,
+  BLOCKSCOUT_NETWORKS,
+} from "../src/services/BlockscoutService";
 
 interface BlockscoutDeployment {
   network: string;
@@ -21,63 +24,87 @@ interface BlockscoutDeployment {
 }
 
 async function main() {
-  const [deployer] = await ethers.getSigners();
-  const network = await ethers.provider.getNetwork();
-  
-  console.log("🚀 Deploying Pool Payments Protocol with Blockscout Integration...");
+  const [deployer] = await hre.ethers.getSigners();
+  const network = await hre.ethers.provider.getNetwork();
+
+  console.log(
+    "🚀 Deploying Pool Payments Protocol with Blockscout Integration..."
+  );
   console.log("Network:", network.name);
   console.log("Chain ID:", network.chainId.toString());
   console.log("Deployer:", deployer.address);
-  console.log("Balance:", ethers.formatEther(await ethers.provider.getBalance(deployer.address)), "ETH");
+  console.log(
+    "Balance:",
+    hre.ethers.formatEther(
+      await hre.ethers.provider.getBalance(deployer.address)
+    ),
+    "ETH"
+  );
 
   // Initialize Blockscout service
   const blockscoutService = new BlockscoutService();
-  
+
   // Determine network key for Blockscout
   let networkKey: string;
   if (network.chainId === 545n) {
-    networkKey = 'flowEvmTestnet';
+    networkKey = "flowEvmTestnet";
   } else if (network.chainId === 4801n) {
-    networkKey = 'worldChainSepolia';
+    networkKey = "worldChainSepolia";
   } else {
-    throw new Error(`Unsupported network for Blockscout integration: ${network.chainId}`);
+    throw new Error(
+      `Unsupported network for Blockscout integration: ${network.chainId}`
+    );
   }
 
   blockscoutService.setNetwork(networkKey);
   const blockscoutNetwork = BLOCKSCOUT_NETWORKS[networkKey];
-  
+
   console.log("🔍 Blockscout Explorer:", blockscoutNetwork.explorerUrl);
 
   // Deploy CREATE2 Factory first if not exists
   console.log("\n1. Checking CREATE2 Factory...");
-  const deploymentsFile = join(process.cwd(), "deployments", "create2-factory.json");
+  const deploymentsFile = join(
+    process.cwd(),
+    "deployments",
+    "create2-factory.json"
+  );
   let factoryAddress: string;
-  
+
   if (existsSync(deploymentsFile)) {
-    const factoryDeployments = JSON.parse(readFileSync(deploymentsFile, "utf8"));
-    const factoryDeployment = factoryDeployments.find((d: any) => d.chainId === Number(network.chainId));
-    
+    const factoryDeployments = JSON.parse(
+      readFileSync(deploymentsFile, "utf8")
+    );
+    const factoryDeployment = factoryDeployments.find(
+      (d: any) => d.chainId === Number(network.chainId)
+    );
+
     if (factoryDeployment) {
       factoryAddress = factoryDeployment.factoryAddress;
       console.log("✅ Using existing CREATE2 Factory:", factoryAddress);
     } else {
-      throw new Error("CREATE2 Factory not deployed for this network. Run deploy/01-deploy-create2-factory.ts first");
+      throw new Error(
+        "CREATE2 Factory not deployed for this network. Run deploy/01-deploy-create2-factory.ts first"
+      );
     }
   } else {
-    throw new Error("CREATE2 Factory deployments file not found. Run deploy/01-deploy-create2-factory.ts first");
+    throw new Error(
+      "CREATE2 Factory deployments file not found. Run deploy/01-deploy-create2-factory.ts first"
+    );
   }
 
   // Deploy Pool Payments Contract using CREATE2
   console.log("\n2. Deploying Pool Payments Contract...");
-  
+
   // For this example, we'll deploy a simple Lock contract
   // In a real implementation, this would be your Pool Payments contract
   const contractName = "Lock";
   const unlockTime = Math.floor(Date.now() / 1000) + 365 * 24 * 60 * 60; // 1 year from now
   const constructorArgs = [unlockTime];
 
-  const ContractFactory = await ethers.getContractFactory(contractName);
-  const deploymentData = ContractFactory.getDeployTransaction(...constructorArgs);
+  const ContractFactory = await hre.ethers.getContractFactory(contractName);
+  const deploymentData = ContractFactory.getDeployTransaction(
+    ...constructorArgs
+  );
   const bytecode = deploymentData.data;
 
   if (!bytecode) {
@@ -85,18 +112,21 @@ async function main() {
   }
 
   // Use CREATE2 for deterministic deployment
-  const factory = await ethers.getContractAt("Create2Factory", factoryAddress);
-  const salt = ethers.keccak256(ethers.toUtf8Bytes("pool-payments-v1"));
-  
+  const factory = await hre.ethers.getContractAt(
+    "Create2Factory",
+    factoryAddress
+  );
+  const salt = hre.ethers.keccak256(hre.ethers.toUtf8Bytes("pool-payments-v1"));
+
   // Compute the address
   const computedAddress = await factory.computeAddress(bytecode, salt);
   console.log("Computed contract address:", computedAddress);
 
   // Check if already deployed
-  const existingCode = await ethers.provider.getCode(computedAddress);
+  const existingCode = await hre.ethers.provider.getCode(computedAddress);
   let deploymentTx: any;
   let receipt: any;
-  
+
   if (existingCode !== "0x") {
     console.log("✅ Contract already deployed at:", computedAddress);
     // Get deployment transaction from previous deployment
@@ -114,17 +144,17 @@ async function main() {
   // 3. Verify contract on Blockscout
   console.log("\n3. Verifying contract on Blockscout...");
   let verified = false;
-  
+
   try {
     // Get contract source code (simplified for demo)
     const sourceCode = `
       // SPDX-License-Identifier: UNLICENSED
       pragma solidity ^0.8.24;
-      
+
       contract Lock {
           uint public unlockTime;
           address payable public owner;
-          
+
           constructor(uint _unlockTime) payable {
               require(block.timestamp < _unlockTime, "Unlock time should be in the future");
               unlockTime = _unlockTime;
@@ -152,7 +182,7 @@ async function main() {
 
   // 4. Set up Blockscout monitoring
   console.log("\n4. Setting up Blockscout monitoring...");
-  
+
   try {
     // Create address tag (requires API key in production)
     const apiKey = process.env.BLOCKSCOUT_API_KEY;
@@ -167,8 +197,8 @@ async function main() {
       // Add to watchlist
       const notificationSettings = {
         native: { incoming: true, outcoming: true },
-        'ERC-20': { incoming: true, outcoming: true },
-        'ERC-721': { incoming: false, outcoming: false },
+        "ERC-20": { incoming: true, outcoming: true },
+        "ERC-721": { incoming: false, outcoming: false },
       };
 
       await blockscoutService.addToWatchlist(
@@ -187,10 +217,10 @@ async function main() {
 
   // 5. Test Merits integration
   console.log("\n5. Testing Merits integration...");
-  
+
   try {
     const userId = process.env.BLOCKSCOUT_USER_ID || "demo-user";
-    
+
     // Award Merits for successful deployment
     const meritsTransaction = await blockscoutService.awardMerits(
       userId,
@@ -221,7 +251,7 @@ async function main() {
 
   // 6. Save deployment record
   console.log("\n6. Saving deployment record...");
-  
+
   const deploymentRecord: BlockscoutDeployment = {
     network: network.name,
     chainId: Number(network.chainId),
@@ -229,15 +259,19 @@ async function main() {
     deploymentTx: deploymentTx.hash,
     blockNumber: receipt?.blockNumber || 0,
     verified,
-    blockscoutUrl: blockscoutService.getExplorerUrl('address', computedAddress),
+    blockscoutUrl: blockscoutService.getExplorerUrl("address", computedAddress),
     meritsEnabled: !!blockscoutNetwork.meritsApiUrl,
     timestamp: Date.now(),
   };
 
   // Load existing deployments
-  const blockscoutDeploymentsFile = join(process.cwd(), "deployments", "blockscout-deployments.json");
+  const blockscoutDeploymentsFile = join(
+    process.cwd(),
+    "deployments",
+    "blockscout-deployments.json"
+  );
   let deployments: BlockscoutDeployment[] = [];
-  
+
   if (existsSync(blockscoutDeploymentsFile)) {
     try {
       const existing = readFileSync(blockscoutDeploymentsFile, "utf8");
@@ -248,7 +282,9 @@ async function main() {
   }
 
   // Add or update deployment for this network
-  const existingIndex = deployments.findIndex(d => d.chainId === Number(network.chainId));
+  const existingIndex = deployments.findIndex(
+    d => d.chainId === Number(network.chainId)
+  );
   if (existingIndex >= 0) {
     deployments[existingIndex] = deploymentRecord;
   } else {
@@ -262,8 +298,11 @@ async function main() {
   }
 
   // Save updated deployments
-  writeFileSync(blockscoutDeploymentsFile, JSON.stringify(deployments, null, 2));
-  
+  writeFileSync(
+    blockscoutDeploymentsFile,
+    JSON.stringify(deployments, null, 2)
+  );
+
   console.log("📁 Deployment record saved to:", blockscoutDeploymentsFile);
 
   // 7. Display summary
@@ -271,20 +310,26 @@ async function main() {
   console.log("=====================================");
   console.log(`📍 Contract Address: ${computedAddress}`);
   console.log(`🔍 Blockscout URL: ${deploymentRecord.blockscoutUrl}`);
-  console.log(`✅ Verified: ${verified ? 'Yes' : 'No'}`);
-  console.log(`🏆 Merits Enabled: ${deploymentRecord.meritsEnabled ? 'Yes' : 'No'}`);
+  console.log(`✅ Verified: ${verified ? "Yes" : "No"}`);
+  console.log(
+    `🏆 Merits Enabled: ${deploymentRecord.meritsEnabled ? "Yes" : "No"}`
+  );
   console.log(`🌐 Network: ${blockscoutNetwork.name}`);
-  
+
   console.log("\n📋 Next Steps:");
   console.log("1. Visit the Blockscout URL to view your contract");
-  console.log("2. Set up frontend integration using BlockscoutIntegration component");
+  console.log(
+    "2. Set up frontend integration using BlockscoutIntegration component"
+  );
   console.log("3. Configure user authentication for Merits rewards");
-  console.log("4. Monitor transactions using the usePoolPaymentsBlockscout hook");
+  console.log(
+    "4. Monitor transactions using the usePoolPaymentsBlockscout hook"
+  );
 }
 
 main()
   .then(() => process.exit(0))
-  .catch((error) => {
+  .catch(error => {
     console.error(error);
     process.exit(1);
   });
