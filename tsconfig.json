@@ -8,6 +8,32 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "moduleResolution": "node16",
-    "outDir": "dist"
-  }
+    "outDir": "dist",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "removeComments": false,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@contracts/*": ["./contracts/*"],
+      "@scripts/*": ["./scripts/*"],
+      "@test/*": ["./test/*"]
+    }
+  },
+  "include": [
+    "contracts/**/*",
+    "scripts/**/*",
+    "test/**/*",
+    "hardhat.config.ts"
+  ],
+  "exclude": ["node_modules", "dist", "artifacts", "cache", "frontend"]
 }
