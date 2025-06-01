@@ -9,7 +9,12 @@
     "deploy": "hardhat deploy",
     "node": "hardhat node",
     "lint": "eslint . --ext .ts",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "dev": "cd frontend && npm run dev",
+    "build": "npm run compile && cd frontend && npm run build",
+    "frontend:install": "cd frontend && npm install",
+    "frontend:build": "cd frontend && npm run build",
+    "frontend:dev": "cd frontend && npm run dev"
   },
   "keywords": [
     "ethereum",
@@ -23,14 +28,21 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.9.0"
+    "@openzeppelin/contracts": "^4.9.0",
+    "ethers": "^6.0.0"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-ignition": "^3.0.0-next.13",
     "@nomicfoundation/hardhat-toolbox-viem": "^4.0.0-next.13",
     "@types/node": "^22.15.29",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.4.1",
     "forge-std": "github:foundry-rs/forge-std#v1.9.4",
     "hardhat": "^3.0.0-next.13",
+    "prettier": "^3.5.3",
     "typescript": "~5.5.0",
     "viem": "^2.30.5"
   }
