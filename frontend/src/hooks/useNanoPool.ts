@@ -65,7 +65,7 @@ export function usePool(poolId: number, chainId: number = defaultChainId) {
         deadlineTimestamp: poolData[5],
         goalAchieved: poolData[6],
         fundsDisbursed: poolData[7],
-        contributors: contributors as string[],
+        contributors: contributors as `0x${string}`[],
         isActive: isActive as boolean,
       };
 
