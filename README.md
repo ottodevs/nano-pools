@@ -1,93 +1,73 @@
-# NanoPools 💧
+# Hardhat 3 Alpha: `node:test` and `viem` example project
 
-NanoPools enables transparent, on-chain micro-pools for collective funding across EVM-compatible chains.
+> **WARNING**: This example project uses Hardhat 3, which is still in development. Hardhat 3 is not yet intended for production use.
 
-## Overview
+Welcome to the Hardhat 3 alpha version! This project showcases some of the changes and new features coming in Hardhat 3.
 
-NanoPools is an omnichain platform facilitating transparent, on-chain micro-pools for collective funding. Users can effortlessly create, contribute to, and manage pools with built-in escrow logic. Optional World ID verification adds a layer of trust, while seamless integration across multiple EVM-compatible chains ensures broad accessibility.
+To learn more about the Hardhat 3 Alpha, please visit [its tutorial](https://hardhat.org/hardhat3-alpha). To share your feedback, join our [Hardhat 3 Alpha](https://hardhat.org/hardhat3-alpha-telegram-group) Telegram group or [open an issue](https://github.com/NomicFoundation/hardhat/issues/new?template=hardhat-3-alpha.yml) in our GitHub issue tracker.
 
-## Key Features
+## Project Overview
 
-- **On-Chain Escrow Logic**: Ensures funds are securely held until predefined goals are met
-- **Multi-Chain Deployment**: Operates across Base, Flow EVM, and World Chain
-- **World ID Integration**: Optional identity verification enhances participant trust
-- **Blockscout Integration**: Provides real-time transparency on pool activities and transactions
-- **User-Friendly Interface**: Designed for ease of use, encouraging adoption among non-technical users
+This example project includes:
 
-## Technical Architecture
+- A simple Hardhat configuration file.
+- Foundry-compatible Solidity unit tests.
+- TypeScript integration tests using [`node:test`](nodejs.org/api/test.html), the new Node.js native test runner, and [`viem`](https://viem.sh/).
+- Examples demonstrating how to connect to different types of networks, including locally simulating OP mainnet.
 
-### Smart Contract Layer
+## Navigating the Project
 
-- `NanoPool.sol`: Core escrow contract with role-based permissions
-- Deployable across all EVM-compatible chains
-- OpenZeppelin security patterns for reentrancy protection
-- Gas-optimized for micro-transactions
+To get the most out of this example project, we recommend exploring the files in the following order:
 
-### Frontend Layer
+1. Read the `hardhat.config.ts` file, which contains the project configuration and explains multiple changes.
+2. Review the "Running Tests" section and explore the files in the `contracts/` and `test/` directories.
+3. Read the "Make a deployment to Sepolia" section and follow the instructions.
 
-- Next.js application with Worldcoin MiniKit SDK integration
-- Chain-agnostic interface with dynamic provider switching
-- Real-time updates via WebSocket connections to chain data
-- PWA capabilities for offline pool browsing
+Each file includes inline explanations of its purpose and highlights the changes and new features introduced in Hardhat 3.
 
-### Integration Layer
+## Usage
 
-- Blockscout SDK for advanced blockchain data
-- World ID integration for human verification
-- Social platform APIs for sharing mechanics
-- Multi-chain RPC management and failover
+### Running Tests
 
-## Development Roadmap
+To run all the tests in the project, execute the following command:
 
-### Phase 1: Core Smart Contract & Single Chain MVP
-- Functional NanoPool contract on Base testnet with basic frontend
-
-### Phase 2: Multi-Chain Expansion & World ID Integration
-- Deploy to Flow EVM and World Chain, integrate Worldcoin MiniKit
-
-### Phase 3: Advanced Features & Ecosystem Integration
-- Blockscout integration, social features, enhanced governance
-
-### Phase 4: AI Agent Integration & Advanced Automation
-- AI-powered pool management and creation
-
-## Getting Started
-
-```bash
-# Clone the repository
-git clone https://github.com/ottodevs/nano-pools.git
-cd nano-pools
-
-# Install dependencies
-npm install
-
-# Setup environment variables
-cp .env.example .env
-# Edit .env with your configuration
-
-# Run development server
-npm run dev
+```shell
+npx hardhat test
 ```
 
-## How It's Made
+You can also selectively run the Solidity or `node:test` tests:
 
-NanoPools was built using a combination of modern web3 technologies:
+```shell
+npx hardhat test solidity
+npx hardhat test node
+```
 
-- **Smart Contracts**: Written in Solidity, handling pool creation, contributions, disbursements, and refunds
-- **Development Framework**: Utilized Hardhat for contract development, testing, and deployment
-- **Frontend**: Developed with Next.js, providing a responsive and intuitive user interface
-- **World ID Integration**: Incorporated World IDKit for optional user verification, enhancing trustworthiness
-- **Blockscout Integration**: Leveraged Blockscout's SDK to display real-time pool activity and transaction statuses
-- **Multi-Chain Deployment**: Deployed contracts on Base, Flow EVM, and World Chain networks, demonstrating interoperability
+### Make a deployment to Sepolia
 
-## Contributing
+This project includes an example Ignition module to deploy the contract. You can deploy this module to a locally simulated chain or to Sepolia.
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+To run the deployment to a local chain:
 
-## License
+```shell
+npx hardhat ignition deploy ignition/modules/Counter.ts
+```
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+To run the deployment to Sepolia, you need an account with funds to send the transaction. The provided Hardhat configuration includes a Configuration Variable called `SEPOLIA_PRIVATE_KEY`, which you can use to set the private key of the account you want to use.
 
-## ETHGlobal Prague 2025
+You can set the `SEPOLIA_PRIVATE_KEY` variable using the `hardhat-keystore` plugin or by setting it as an environment variable.
 
-This project was developed from scratch during ETHGlobal Prague 2025, adhering strictly to all event rules and guidelines.
+To set the `SEPOLIA_PRIVATE_KEY` config variable using `hardhat-keystore`:
+
+```shell
+npx hardhat keystore set SEPOLIA_PRIVATE_KEY
+```
+
+After setting the variable, you can run the deployment with the Sepolia network:
+
+```shell
+npx hardhat ignition deploy --network sepolia ignition/modules/Counter.ts
+```
+
+---
+
+Feel free to explore the project and provide feedback on your experience with Hardhat 3 Alpha!
