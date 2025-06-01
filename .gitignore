@@ -54,3 +54,4 @@ scripts
 # Typechain output
 /types
 .vercel
+.next
